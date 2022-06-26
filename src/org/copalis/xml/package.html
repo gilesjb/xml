@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+   Copyright 2009 Giles Burgess
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-->
+</head>
+<body bgcolor="white">
+
+Provides classes for using a Java interface as an XML schema.
+
+<h2>Package Specification</h2>
+
+Provides classes for using a Java interface as an XML schema.
+<p/>
+In order to be compatible with the framework,
+a schema interface must follow certain conventions,
+which are illustrated by the following example:
+<p/>
+<pre>
+interface ProductSchema {
+   void _(Product);
+   Product product();
+   Name name();
+   Quantity quantity();
+   Price price();
+}
+
+interface Product {
+    Product _(Name child);
+    Product _(Quantity child);
+    Product _(Price.Currency.Amount child);
+}
+
+interface Name {
+    Name $(String text);
+}
+
+interface Quantity {
+    Quantity $(String value);
+}
+
+interface Price {
+    Currency currency(String value);
+    
+    interface Currency {
+        Amount $(String value);
+        
+        interface Amount {}
+    }
+}
+</pre>
+
+A schema interface such as ProductSchema must contain exactly one void method named &quot;_&quot;,
+which accepts as its single parameter the root node of the document.
+<p/>
+In addition, the interface contains factory methods for each type of node that may exist in the document.
+Factory methods take no parameters, and have the same name as the element tag.
+<p/>
+Further interfaces define the various node types.
+A node interface can contain attribute methods, child methods, and text methods.
+A child method has the name &quot;_&quot;, accepts a child node, and returns the current node.
+A text method has the name &quot;$&quot;, and accepts a String value which is added as a child text node.
+An attribute method has an alphanumeric name, which is the name of the attribute, and accepts a single parameter.
+
+<!-- Put @see and @since tags down here. -->
+
+</body>
+</html>
